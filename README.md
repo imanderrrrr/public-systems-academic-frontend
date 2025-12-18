@@ -118,5 +118,5 @@ Desarrollador Junior Full Stack
 
 ## Contacto
 
-- LinkedIn / Email: <TU_CONTACTO>
+- Email: andersonaguirre794@gmail.com
 - Disponible para roles Frontend (remoto) junior/semisenior.
