@@ -1,80 +1,122 @@
+# Public Systems – Academic Frontend Web
 
-  # Página de Inicio Institucional
+Frontend web desarrollado como **sitio institucional/académico** para la carrera de Sistemas de la Universidad Mariano Gálvez (UMG).  
+El proyecto fue diseñado como una landing moderna e informativa, con enfoque en experiencia de usuario, arquitectura de componentes y animaciones cuidadas.
 
-  This is a code bundle for Página de Inicio Institucional. The original project is available at https://www.figma.com/design/oV0j7uFDXTGP7MbnI1se6d/P%C3%A1gina-de-Inicio-Institucional.
+Este repositorio busca demostrar **bases sólidas en frontend moderno**, más allá de un proyecto meramente académico.
 
-  ## Running the code
+---
 
-  Run `npm i` to install the dependencies.
+## Stack tecnológico
 
-  Run `npm run dev` to start the development server.
+- **React + TypeScript**
+- **Vite**
+- **Tailwind CSS**
+- **Framer Motion**
+- **ESLint / Prettier**
+- **Docker + Nginx (SPA)**
+- **Husky / lint-staged**
 
-  ---
+---
 
-  ## 📋 Registro de Errores y Soluciones
+## Características técnicas destacadas
 
-  ### 2025-11-17 · Navegación por rutas (deep link)
+- Arquitectura basada en componentes reutilizables.
+- Navegación centralizada para evitar prop drilling y manejar scroll de forma consistente.
+- Animaciones fluidas y controladas con Framer Motion.
+- Diseño responsive para desktop y dispositivos móviles.
+- Separación clara entre lógica, presentación y estilos.
+- Configuración de entorno y despliegue lista para producción básica.
 
-  - Error observado: Al abrir enlaces directos como `http://localhost:3001/inscripcion` o `https://<dominio>/inscripcion`, el sitio cargaba la página de inicio en lugar de mostrar la sección de Inscripción.
-  - Causa raíz: La app no usaba enrutamiento basado en URL. La navegación estaba implementada solo con estado interno (`onNavigate`/`currentPage`), por lo que al recargar o acceder directamente a una ruta, no existía ningún router que resolviera el path.
-  - Solución aplicada:
-    - Se integró `react-router-dom` y se envolvió la app con `BrowserRouter` (`src/main.tsx`).
-    - Se definieron rutas en `src/App.tsx` con `Routes`/`Route` para: `/` (Inicio), `/pensum`, `/inscripcion`, `/jornada`, `/galeria`, `/contacto`.
-    - Se añadió redirección desde `/inscripción` (con tilde) hacia `/inscripcion` para admitir enlaces con acento.
-    - Se agregó un fallback 404 que redirige a `/` para rutas no reconocidas.
-    - Se actualizó `Navbar.tsx` y `Footer.tsx` para usar `Link`/`useLocation` y reflejar el estado activo por URL.
-    - Se ajustó `nginx-spa.conf` para aceptar cualquier host con `server_name _;` manteniendo `try_files` a `index.html` (comportamiento SPA correcto en producción).
-  - Por qué lo soluciona: `react-router-dom` interpreta la URL y monta el componente de página correspondiente, permitiendo el acceso directo (deep linking) y la recarga en cualquier ruta. El ajuste en Nginx garantiza que cualquier solicitud a una ruta existente sirva el `index.html`, delegando al router del navegador la resolución del path.
-  - Verificación: Acceder directamente a `/inscripcion`, `/pensum`, `/jornada`, `/galeria`, `/contacto` carga cada página correspondiente sin redirigir a la raíz.
+---
 
-  ### ✅ Errores en Botones y Enlaces
+## Archivos clave para revisión técnica
 
-  | Error | Ubicación | Estado | Verificación |
-  |-------|-----------|--------|-------------|
-  | **Botones de redes sociales (footer)** - Los enlaces de Facebook, Instagram y YouTube no llevaban a ningún lado | `Footer.tsx` línea 117-119 | ✅ SOLUCIONADO | Se configuraron para leer variables de entorno desde `.env.local`. Son completamente modificables. |
-  | **Botón "Revisar Requisitos en Línea"** - No tenía funcionalidad | ~~No existe~~ | ✅ ELIMINADO | Se decidió eliminar este botón durante el desarrollo. |
-  | **Botón "Explorar Carrera" (Inicio)** - Redirigía a sección de fotos | `Hero.tsx` línea 86 | ✅ SOLUCIONADO | Ahora redirige correctamente a la sección "Pensum": `onClick={() => onNavigate?.('pensum')}` |
-  | **Botón "Cómo Llegar" (Ubicación)** - No tenía acción asignada | `MapaUbicacion.tsx` línea 138 | ✅ SOLUCIONADO | Ahora abre Google Maps: `onClick={() => window.open('https://maps.app.goo.gl/pnGsi8zyZvKVw1297', '_blank')}` |
-  | **Botón "Conoce Más"** - No estaba programado | `TechVision.tsx` línea 171 y `MotivationalSection.tsx` línea 153 | ✅ SOLUCIONADO | Redirige al Pensum: `onClick={() => onNavigate?.('pensum')}` |
-  | **Botón "Ver requisitos de inscripción"** - Falta de funcionalidad | `CallToAction.tsx` línea 107 | ✅ SOLUCIONADO | Redirige a Inscripción: `onClick={() => onNavigate?.("inscripción")}` |
-  | **Botones de video** - Los videos no funcionaban | `VideoSection.tsx` línea 227 | ✅ SOLUCIONADO | Se implementó carga correcta de videos con detección de duración y timeout de 5 segundos para evitar "N/A". Reproducción con: `onClick={() => setPlayingVideo(video.id)}` |
+Si eres reclutador o desarrollador y deseas revisar piezas representativas del proyecto:
 
-  ### ✅ Errores de Contenido
+- `src/components/Navbar.tsx`  
+  Navbar responsive con manejo de estado, animaciones y comportamiento según scroll.
 
-  | Error | Ubicación | Estado | Solución Aplicada |
-  |-------|-----------|--------|------------------|
-  | **Número de teléfono incorrecto** - El número en "Contáctanos" no era correcto | `ContactoHero.tsx`, `Footer.tsx` | ✅ SOLUCIONADO | Se configuró para leer desde variable de entorno `VITE_PHONE_CONTACT` en `.env.local`. Completamente editable. |
+- `src/components/ImageCarousel.tsx`  
+  Carrusel con auto-play, controles manuales y animaciones suaves.
 
-  ### ✅ Mejoras Implementadas
+- `src/components/TechVision.tsx`  
+  Sección visual con CTA, animaciones SVG e interacción con la navegación.
 
-  | Mejora | Ubicación | Estado | Implementación |
-  |--------|-----------|--------|-----------------|
-  | **Botón WhatsApp en "Contáctanos"** - Se necesitaba botón verde para WhatsApp | `ContactoHero.tsx` línea 145 | ✅ AGREGADO | Se añadió botón verde que redirige a WhatsApp: `onClick={sendWhatsAppMessage}` usando variable `VITE_WHATSAPP_PHONE` |
-  | **Plan de inscripción incompleto** - Faltaban horarios y costos | `HorariosSection.tsx`, `DuracionSection.tsx` | ✅ COMPLETADO | Se agregaron secciones con: Horarios disponibles, Costo de inscripción y Costo mensual |
-  | **Protección contra traducción automática** - Google Translate ofrecía traducir | `index.html` | ✅ SOLUCIONADO | Se configuró con `lang="es"`, `translate="no"` y meta tag `<meta name="google" content="notranslate" />` |
+---
 
-  ### 📝 Configuración Requerida
+## Enfoque de diseño
 
-  Para que todos los botones y enlaces funcionen correctamente, el cliente debe crear un archivo `.env.local` en la raíz del proyecto con las siguientes variables:
+El diseño prioriza:
 
-  ```env
-  # Redes Sociales
-  VITE_FACEBOOK_URL=https://www.facebook.com/TuPagina
-  VITE_YOUTUBE_URL=https://www.youtube.com/@TuCanal
-  VITE_TIKTOK_URL=https://www.tiktok.com/@TuPerfil
-  VITE_GMAIL_URL=mailto:ejemplo@umg.edu.gt
+- Claridad del mensaje institucional.
+- Jerarquía visual.
+- Microinteracciones que mejoran la experiencia sin sobrecargar la UI.
+- Consistencia visual en todo el sitio.
 
-  # Información de Contacto
-  VITE_PHONE_CONTACT=XXXX-XXXX
-  VITE_WHATSAPP_PHONE=502XXXXXXXXXX
-  ```
+---
 
-  > **Nota:** Sin estas variables configuradas, algunos botones no funcionarán correctamente.  
+## Contexto académico
 
-  ---
+Este proyecto fue desarrollado como parte de la carrera universitaria, cumpliendo un rol **institucional/académico**, pero con un enfoque intencional en buenas prácticas y estándares modernos de desarrollo frontend.
 
-  ## Notas técnicas recientes
+---
 
-  - Se actualizó `.env.example` para incluir todas las claves usadas en el código: `VITE_TIKTOK_URL`, `VITE_GMAIL_URL`, `VITE_GMAIL_EMAIL`, además de las ya existentes.
-  - Se extendió `src/vite-env.d.ts` para tipar `VITE_PHONE_CONTACT`, `VITE_WHATSAPP_PHONE` y `VITE_GMAIL_EMAIL`.
-  - `Dockerfile`: se cambió a `npm install` cuando no existe `package-lock.json` para evitar fallos en build. Si se añade `package-lock.json`, se puede volver a `npm ci`.
+## Capturas del proyecto
+
+Vista general de las principales secciones del sitio institucional.
+
+<div align="center">
+
+<table>
+  <tr>
+    <td align="center">
+      <img src="images/inicio.png" width="280" />
+      <br />
+      <sub>Inicio</sub>
+    </td>
+    <td align="center">
+      <img src="images/inicio-2.png" width="280" />
+      <br />
+      <sub>Inicio – sección informativa</sub>
+    </td>
+    <td align="center">
+      <img src="images/inscripcion.png" width="280" />
+      <br />
+      <sub>Proceso de inscripción</sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="images/jornada.png" width="280" />
+      <br />
+      <sub>Jornadas académicas</sub>
+    </td>
+    <td align="center">
+      <img src="images/pensum.png" width="280" />
+      <br />
+      <sub>Pensum</sub>
+    </td>
+    <td align="center">
+      <img src="images/contacto.png" width="280" />
+      <br />
+      <sub>Contacto</sub>
+    </td>
+  </tr>
+</table>
+
+</div>
+
+## Nota de privacidad
+
+El código completo del proyecto se mantiene privado. Este showcase contiene archivos seleccionados y anotados con fines de evaluación técnica.
+
+## Autor
+
+Anderson Aguirre  
+Desarrollador Junior Full Stack
+
+## Contacto
+
+- LinkedIn / Email: <TU_CONTACTO>
+- Disponible para roles Frontend (remoto) junior/semisenior.
